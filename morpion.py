@@ -1,4 +1,3 @@
-
 def affichage_plateau(plateau):
     for ligne in plateau:
         print(' | '.join(ligne))
@@ -8,9 +7,12 @@ def affichage_plateau(plateau):
 def winEvent(plateau, symbole):
     taille = len(plateau)
 
+    # Vérifier les lignes et colonnes pour voir s'il y a une victoire
     for i in range(taille):
         if all(plateau[i][j] == symbole for j in range(taille)) or all(plateau[j][i] == symbole for j in range(taille)):
             return True
+    
+    # Vérifier les diagonales
     if all(plateau[i][i] == symbole for i in range(taille)) or all(
             plateau[i][taille - 1 - i] == symbole for i in range(taille)):
         return True
@@ -21,7 +23,8 @@ def winEvent(plateau, symbole):
 def creer_plateau(taille):
     return [[' ' for _ in range(taille)] for _ in range(taille)]
 
-def tour_ordi(plateau, symbole): # action de l'ordi
+
+def tour_ordi(plateau, symbole):
     taille = len(plateau)
 
     # Vérifier s'il peut gagner en complétant une ligne
@@ -60,19 +63,23 @@ def tour_ordi(plateau, symbole): # action de l'ordi
                 plateau[i][j] = symbole
                 return
 
+
 def rejouer():
     choix = input("Voulez-vous rejouer ? (Oui/Non): ").lower()
     if choix == "oui":
         return True
 
+
 def main():
     while True:
+        # Demander la taille du plateau à l'utilisateur
         taille_plateau = int(input("Choisissez la taille du plateau : "))
         plateau = creer_plateau(taille_plateau)
         symboles = ['X', 'O']
         tour = 0
 
         while True:
+            # Afficher le plateau actuel
             affichage_plateau(plateau)
 
             if tour % 2 == 0:
@@ -80,10 +87,13 @@ def main():
                 choix = input(f"Joueur {joueur}, choisissez une case (ligne colonne) : ")
 
                 try:
+                    # Convertir les coordonnées de l'utilisateur en entiers
                     ligne, colonne = map(int, choix.split())
                     if 1 <= ligne <= taille_plateau and 1 <= colonne <= taille_plateau:
                         if plateau[ligne - 1][colonne - 1] == ' ':
+                            # Mettre à jour le plateau avec le symbole du joueur
                             plateau[ligne - 1][colonne - 1] = joueur
+                            # Vérifier s'il y a une victoire ou un match nul
                             if winEvent(plateau, joueur):
                                 affichage_plateau(plateau)
                                 print(f"Le joueur {joueur} a gagné !")
@@ -102,7 +112,9 @@ def main():
             else:
                 joueur = symboles[1]
                 print(f"Tour de l'ordinateur ({joueur}) :")
+                # Laisser l'ordinateur jouer
                 tour_ordi(plateau, joueur)
+                # Vérifier s'il y a une victoire ou un match nul
                 if winEvent(plateau, joueur):
                     affichage_plateau(plateau)
                     print(f"L'ordinateur ({joueur}) a gagné !")
@@ -113,7 +125,15 @@ def main():
                     break
                 tour += 1
 
+        # Demander à l'utilisateur s'il veut rejouer
         if not rejouer():
             break
+
+
+main()
+
+        if not rejouer():
+            break
+
 
 main()
